@@ -20,7 +20,7 @@ public class UserService {
 
         User user = User.builder()
                 .email(email)
-                .password(password) // поки без шифрування
+                .password(password)
                 .role(Role.USER)
                 .build();
 

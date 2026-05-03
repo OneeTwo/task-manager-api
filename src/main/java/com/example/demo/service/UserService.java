@@ -4,6 +4,7 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User register(String email, String password) {
 
@@ -20,7 +22,7 @@ public class UserService {
 
         User user = User.builder()
                 .email(email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .role(Role.USER)
                 .build();
 

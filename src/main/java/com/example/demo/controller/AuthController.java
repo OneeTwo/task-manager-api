@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,17 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
-        return userService.register(
+    public UserResponse register(@RequestBody RegisterRequest request) {
+        User user = userService.register(
                 request.getEmail(),
                 request.getPassword()
         );
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
     }
 
     @GetMapping("/test")

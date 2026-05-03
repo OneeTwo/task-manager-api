@@ -13,35 +13,39 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtService jwtService;
+
     private final UserService userService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody RegisterRequest request) {
-        User user = userService.register(
+        User newUser = userService.register(
                 request.getEmail(),
                 request.getPassword()
         );
 
         return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .role(user.getRole().name())
+                .id(newUser.getId())
+                .email(newUser.getEmail())
+                .role(newUser.getRole().name())
                 .build();
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        User newUser = userService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        return jwtService.generateToken(
+                newUser.getEmail(),
+                newUser.getRole().name()
+        );
     }
 
     @GetMapping("/test")
     public String test() {
         return "ok";
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        User user = userService.login(
-                request.getEmail(),
-                request.getPassword()
-        );
-
-        return jwtService.generateToken(user.getEmail());
     }
 }

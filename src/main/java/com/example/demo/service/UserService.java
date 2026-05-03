@@ -20,25 +20,23 @@ public class UserService {
             throw new RuntimeException("User already exists");
         }
 
-        User user = User.builder()
+        User newUser = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .role(Role.USER)
                 .build();
 
-        return userRepository.save(user);
+        return userRepository.save(newUser);
     }
 
     public User login(String email, String password) {
-        User user = userRepository.findByEmail(email)
+        User newUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        if (!encoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, newUser.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
-        return user;
+        return newUser;
     }
 }

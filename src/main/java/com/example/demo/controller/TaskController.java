@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.CreateTaskRequest;
 import com.example.demo.dto.TaskResponse;
 import com.example.demo.dto.UpdateTaskRequest;
-import com.example.demo.entity.Task;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.example.demo.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TaskController {
 
     private final TaskService taskService;

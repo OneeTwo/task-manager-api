@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.TaskResponse;
 import com.example.demo.entity.Task;
 import com.example.demo.entity.User;
 import com.example.demo.repository.TaskRepository;
@@ -16,7 +17,9 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    public Task create(String email, String title, String description) {
+    public TaskResponse create(String email,
+                               String title,
+                               String description) {
 
         User newUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -27,24 +30,34 @@ public class TaskService {
                 .user(newUser)
                 .build();
 
-        return taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+
+        return map(saved);
     }
 
-    public List<Task> getUserTasks(String email) {
+    public List<TaskResponse> getUserTasks(String email) {
+
         User newUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return taskRepository.findByUser(newUser);
+        return taskRepository.findByUser(newUser)
+                .stream()
+                .map(this::map)
+                .toList();
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskResponse> getAllTasks() {
+
+        return taskRepository.findAll()
+                .stream()
+                .map(this::map)
+                .toList();
     }
 
-    public Task update(Long id,
-                       String email,
-                       String title,
-                       String description) {
+    public TaskResponse update(Long id,
+                               String email,
+                               String title,
+                               String description) {
 
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
@@ -56,7 +69,9 @@ public class TaskService {
         task.setTitle(title);
         task.setDescription(description);
 
-        return taskRepository.save(task);
+        Task updated = taskRepository.save(task);
+
+        return map(updated);
     }
 
     public void delete(Long id, String email) {
@@ -69,5 +84,15 @@ public class TaskService {
         }
 
         taskRepository.delete(task);
+    }
+
+    private TaskResponse map(Task task) {
+
+        return TaskResponse.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .userEmail(task.getUser().getEmail())
+                .build();
     }
 }

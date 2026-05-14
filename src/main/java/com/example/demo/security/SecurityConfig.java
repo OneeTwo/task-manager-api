@@ -15,15 +15,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/tasks/all").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/tasks/**").authenticated()
-                        .anyRequest().authenticated()
+
+                        .requestMatchers(
+                                "/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
+                        .requestMatchers("/tasks/all")
+                        .hasAuthority("ROLE_ADMIN")
+
+                        .requestMatchers("/tasks/**")
+                        .authenticated()
+
+                        .anyRequest()
+                        .authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }

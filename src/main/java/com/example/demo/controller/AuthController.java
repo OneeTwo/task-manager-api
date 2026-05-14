@@ -6,6 +6,7 @@ import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody RegisterRequest request) {
+    public UserResponse register(@Valid @RequestBody RegisterRequest request) {
         User newUser = userService.register(
                 request.getEmail(),
                 request.getPassword()
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public String login(@Valid @RequestBody LoginRequest request) {
         User newUser = userService.login(
                 request.getEmail(),
                 request.getPassword()

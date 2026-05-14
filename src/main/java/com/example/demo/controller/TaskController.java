@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CreateTaskRequest;
+import com.example.demo.dto.TaskResponse;
 import com.example.demo.dto.UpdateTaskRequest;
 import com.example.demo.entity.Task;
 import com.example.demo.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public Task create(@RequestBody CreateTaskRequest request, Authentication auth) {
+    public TaskResponse create(@Valid @RequestBody CreateTaskRequest request, Authentication auth) {
         return taskService.create(
                 auth.getName(),
                 request.getTitle(),
@@ -27,17 +29,17 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> myTasks(Authentication auth) {
+    public List<TaskResponse> myTasks(Authentication auth) {
         return taskService.getUserTasks(auth.getName());
     }
 
     @GetMapping("/all")
-    public List<Task> allTasks() {
+    public List<TaskResponse> allTasks() {
         return taskService.getAllTasks();
     }
 
     @PutMapping("/{id}")
-    public Task update(@PathVariable Long id,
+    public TaskResponse update(@PathVariable Long id,
                        @RequestBody UpdateTaskRequest request,
                        Authentication auth) {
 

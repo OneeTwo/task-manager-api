@@ -40,4 +40,34 @@ public class TaskService {
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
+
+    public Task update(Long id,
+                       String email,
+                       String title,
+                       String description) {
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Access denied");
+        }
+
+        task.setTitle(title);
+        task.setDescription(description);
+
+        return taskRepository.save(task);
+    }
+
+    public void delete(Long id, String email) {
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Access denied");
+        }
+
+        taskRepository.delete(task);
+    }
 }

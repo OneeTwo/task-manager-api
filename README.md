@@ -2,6 +2,8 @@
 
 REST API for task management built with Spring Boot.
 
+---
+
 ## Features
 
 - User registration and login
@@ -55,26 +57,3 @@ Swagger UI:
 
 ```text
 http://localhost:8081/swagger-ui/index.html
-
-
-## Screenshots
-
-### Swagger Main Page
-
-![Main](screenshots/main-page.png)
-
-### Authorization
-
-![Auth](screenshots/auth.png)
-
-### Create Task
-
-![Create](screenshots/postTask.png)
-
-### Successful Response
-
-![Success](screenshots/postTaskSuccess.png)
-
-### Get Tasks
-
-![Tasks](screenshots/getTask.png)
